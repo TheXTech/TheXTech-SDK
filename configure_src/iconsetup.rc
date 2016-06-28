@@ -1,0 +1,13 @@
+#include "resource.h"
+#include <winresrc.h>
+
+IDI_ICON1 ICON    DISCARDABLE     "icon.ico"
+
+IDD_DIALOG1 DIALOGEX 0, 0, 199, 31
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_CAPTION
+CAPTION "Uploading..."
+FONT 8, "Arial", 400, 0, 0x1
+BEGIN
+    CTEXT           "Please wait...",IDC_XLABEL,7,7,185,10
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",PBS_SMOOTH,7,18,185,6
+END

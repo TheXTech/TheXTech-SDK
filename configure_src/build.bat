@@ -21,7 +21,7 @@ echo Running g++ to build application...
 @echo on
 g++ -c configure.cpp -O1 -Os
 	@IF ERRORLEVEL 1 goto quit
-g++ configure.o iconsetup.res -o configure %LDFlags% -O1 -Os
+g++ configure.o iconsetup.res -o ../configure %LDFlags% -O1 -Os
 	@IF ERRORLEVEL 1 goto quit
 @echo off
 del *.o

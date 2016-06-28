@@ -2,6 +2,9 @@
 rem To build this application you shuld setup a MSVC-2015 compiller into the path enveromnet
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
 
+set INCLUDE=%INCLUDE%;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt
+set LIB=%LIB%;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\ucrt\x86
+
 echo Running winres to build resources...
 rc /nologo iconsetup.rc
 IF ERRORLEVEL 1 goto quit
@@ -23,7 +26,7 @@ cl /c /nologo configure.cpp /EHsc /O1 /Os /MT
 	@IF ERRORLEVEL 1 goto quit
     @echo.
     @echo ===============================================================================
-link /nologo gdi32.lib user32.lib comctl32.lib shell32.lib configure.obj iconsetup.res /RELEASE /SUBSYSTEM:WINDOWS /MACHINE:X86 /OUT:"configure.exe"
+link /nologo gdi32.lib user32.lib comctl32.lib shell32.lib configure.obj iconsetup.res /RELEASE /SUBSYSTEM:WINDOWS /MACHINE:X86 /OUT:"../configure.exe"
 	@IF ERRORLEVEL 1 goto quit
     @echo.
 @rem iconsetup.res -o configure %LDFlags%

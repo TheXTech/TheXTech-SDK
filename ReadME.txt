@@ -15,6 +15,7 @@ Legal information:
 
 This configuration pack is in not affiliated with Nintendo.
 
+Don't use copyrighted stuff in commercial purposes!
 
 Graphics Pack used in the SMBX Engine (Not included with this configuration package!):
 -----------------------------------------------------------------------------------
@@ -52,8 +53,6 @@ This Music pack was created using copyrighted music, captured from the following
  - Super Mario Galaxy (2007)
 
 (c) All rights reserved by their respective owners.
-
-
 
 ===================================================================================
 Credits

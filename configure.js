@@ -141,6 +141,106 @@ function onConfigure()
                 var outputfile = smbxPath+"/graphics/level/level-" + i + ".gif";
                 FileIO.copy( inputfile, outputfile, false );
             }
+
+            /* Ingereting of sounds and musics from target SMBX assembly */
+            FileIO.copy( FileIO.scriptPath()+"/util/music-vanilla.ini", FileIO.scriptPath()+"/music.ini", true );
+
+            if(FileIO.isFileExists(smbxPath+"/music.ini"))
+            {
+                var vMusics  = INI.open( FileIO.scriptPath() + "/music.ini" );
+                var llMusics = INI.open( smbxPath + "/music.ini" );
+
+                for(var i=1; i<=16; i++)
+                {
+                    var section = "world-music-" + i;
+                    llMusics.beginGroup(section);
+                    vMusics.beginGroup(section);
+                    var sndname = llMusics.value("file", "");
+                    if( sndname != "" )
+                    {
+                        var last_slash_idx = sndname.lastIndexOf("/");
+                        if( last_slash_idx != -1 )
+                        {
+                            sndname = sndname.substr(last_slash_idx+1, sndname.length-1);
+                        }
+                        vMusics.setValue("file", sndname );
+                    }
+                    llMusics.endGroup();
+                    vMusics.endGroup();
+                }
+
+                for(var i=1; i<=3; i++)
+                {
+                    var section = "special-music-" + i;
+                    llMusics.beginGroup(section);
+                    vMusics.beginGroup(section);
+                    var sndname = llMusics.value("file", "");
+                    if( sndname != "" )
+                    {
+                        var last_slash_idx = sndname.lastIndexOf("/");
+                        if( last_slash_idx != -1 )
+                        {
+                            sndname = sndname.substr(last_slash_idx+1, sndname.length-1);
+                        }
+                        vMusics.setValue("file", sndname );
+                    }
+                    llMusics.endGroup();
+                    vMusics.endGroup();
+                }
+
+                for(var i=1; i<=56; i++)
+                {
+                    if(i==24) continue;
+                    var section = "level-music-" + i;
+                    llMusics.beginGroup(section);
+                    vMusics.beginGroup(section);
+                    var sndname = llMusics.value("file", "");
+                    if( sndname != "" )
+                    {
+                        var last_slash_idx = sndname.lastIndexOf("/");
+                        if( last_slash_idx != -1 )
+                        {
+                            sndname = sndname.substr(last_slash_idx+1, sndname.length-1);
+                        }
+                        vMusics.setValue("file", sndname );
+                    }
+                    llMusics.endGroup();
+                    vMusics.endGroup();
+                }
+
+                llMusics.close();
+                vMusics.close();
+            }
+
+            FileIO.copy( FileIO.scriptPath()+"/util/sounds-vanilla.ini", FileIO.scriptPath()+"/sounds.ini", true );
+
+            if(FileIO.isFileExists(smbxPath+"/sounds.ini"))
+            {
+                var vSounds  = INI.open( FileIO.scriptPath() + "/sounds.ini" );
+                var llSounds = INI.open( smbxPath + "/sounds.ini" );
+
+                for(var i=1; i<=91; i++)
+                {
+                    var section = "sound-" + i;
+                    llSounds.beginGroup(section);
+                    vSounds.beginGroup(section);
+                    var sndname = llSounds.value("file", "");
+                    if( sndname != "" )
+                    {
+                        var last_slash_idx = sndname.lastIndexOf("/");
+                        if( last_slash_idx != -1 )
+                        {
+                            sndname = sndname.substr( last_slash_idx+1, sndname.length-1);
+                        }
+                        vSounds.setValue("file", sndname );
+                    }
+                    llSounds.endGroup();
+                    vSounds.endGroup();
+                }
+                llSounds.close();
+                vSounds.close();
+            }
+
         }
         catch(e)
         {

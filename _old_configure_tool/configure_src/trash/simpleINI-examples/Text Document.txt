@@ -1,5 +1,0 @@
-CSimpleIniA ini;
-ini.SetUnicode();
-ini.LoadFile("myfile.ini");
-const char * pVal = ini.GetValue("section", "key", "default");
-ini.SetValue("section", "key", "newvalue");

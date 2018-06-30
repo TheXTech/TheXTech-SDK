@@ -11,9 +11,9 @@ end
 
 function marioPlayer:onLoop(tickTime)
     if(Settings.isDebugInfoShown())then
-        Renderer.printText("It's me, Mario!", 100, 430, 0, 15, 0xFFFF0055)
-        Renderer.printText("Player x: "..tostring(self.plr_obj.x), 100, 460, 0, 15, 0xFFFF0055)
-        Renderer.printText("Player y: "..tostring(self.plr_obj.y), 100, 400, 0, 15, 0xFFFF0055)
+        Renderer.printText("It's me, Mario!", 100, 430, FontType.DefaultRaster, 15, 0xFFFF0055)
+        Renderer.printText("Player x: "..tostring(self.plr_obj.x), 100, 460, FontType.DefaultRaster, 15, 0xFFFF0055)
+        Renderer.printText("Player y: "..tostring(self.plr_obj.y), 100, 400, FontType.DefaultRaster, 15, 0xFFFF0055)
     end
 
     if((self.plr_obj.stateID==4) or (self.plr_obj.stateID==5))then

@@ -13,6 +13,9 @@ RED_SW    = 2
 BLUE_SW   = 3
 YELLOW_SW = 4
 
+-- Font to print numeric counters
+numericFont = Font.getId("numeric");
+
 -- Increase player health
 function plr_healthUp(plr)
     if( plr.health < 3 )then
@@ -52,23 +55,23 @@ function onDrawHUD(camera, state)
 
     Graphics.drawImage(gfx_1up,  camera.centerX-165, camera.renderY+26 )
     Graphics.drawImage(gfx_x,    camera.centerX-125, camera.renderY+27 )
-    Renderer.printText(tostring(state.lives), camera.centerX - 103, camera.renderY+27, 3, 15, 0xFFFFFFFF)
-    
+    Renderer.printText(tostring(state.lives), camera.centerX - 103, camera.renderY+27, numericFont, 15, 0xFFFFFFFF)
+
     if( state.leeks ~= 0 ) then
         Graphics.drawImage(gfx_x,    camera.centerX - 125, camera.renderY+47 )
         Graphics.drawImage(gfx_star, camera.centerX - 149, camera.renderY+46 )
-        Renderer.printText(tostring(state.leeks), camera.centerX - 103, camera.renderY+47, 3, 15, 0xFFFFFFFF)
+        Renderer.printText(tostring(state.leeks), camera.centerX - 103, camera.renderY+47, numericFont, 15, 0xFFFFFFFF)
     end
-    
+
     Graphics.drawImage(gfx_x,    camera.centerX+112, camera.renderY+27 )
     Graphics.drawImage(gfx_coin, camera.centerX+88, camera.renderY + 26 )
-    Renderer.printText(tostring(state.coins), camera.centerX + 152, camera.renderY + 27, 3, 15, 0xFFFFFFFF)
+    Renderer.printText(tostring(state.coins), camera.centerX + 152, camera.renderY + 27, numericFont, 15, 0xFFFFFFFF)
 
-    Renderer.printText(tostring(state.points), camera.centerX + 152, camera.renderY + 47, 3, 15, 0xFFFFFFFF)
+    Renderer.printText(tostring(state.points), camera.centerX + 152, camera.renderY + 47, numericFont, 15, 0xFFFFFFFF)
 end
 
 function onLoop(tickTime)
-    -- Renderer.printText("A tiny test: time of tick is: "..tostring(tickTime), 10, 10, 0, 15, 0xFF0000FF)
+    -- Renderer.printText("A tiny test: time of tick is: "..tostring(tickTime), 10, 10, FontType.DefaultRaster, 15, 0xFF0000FF)
     pSwitch.process(tickTime)
 end
 

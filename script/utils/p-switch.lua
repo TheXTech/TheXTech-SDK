@@ -65,7 +65,7 @@ function p_switch.toggle()
             end
         end
     end
-    
+
 end
 
 -- Stop p-switch and transform all coins into brick blocks and brick blocks into coins
@@ -92,7 +92,7 @@ function p_switch.process(tickTime)
     if(not p_switch_enabled)then
         return
     end
-    Renderer.printText("P-SWITCH LEFT "..tostring(p_switch_time_left), 10, 10, 0, 15, 0xFF0000FF)
+    Renderer.printText("P-SWITCH LEFT "..tostring(p_switch_time_left), 10, 10, FontType.DefaultRaster, 15, 0xFF0000FF)
     p_switch_time_left = p_switch_time_left - tickTime
     -- Trigger stop even on last frame of P-Switch time. Because real triggering of event will happen in next frame
     if((p_switch_time_left <= tickTime) and (p_switch_time_left >= 0.0))then

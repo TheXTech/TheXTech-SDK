@@ -9,6 +9,8 @@ function toadPlayer:__init(plr_obj)
     elseif(self.plr_obj.stateID>=3)then
         self.plr_obj.health = 3
     end
+    self.raccoon = require("utils/raccoon")
+    self.raccoon:init(self)
 end
 
 function toadPlayer:onLoop(tickTime)
@@ -25,6 +27,7 @@ function toadPlayer:onLoop(tickTime)
             end
         end
     end
+    self.raccoon:loop(tickTime)
 end
 
 function toadPlayer:onHarm(harmEvent)
@@ -44,6 +47,7 @@ function toadPlayer:onKeyPressed(keyType)
         self.plr_obj:playAnimationOnce(7, 128, true, false, 1)
         ShootHammer(self.plr_obj)
     end
+    self.raccoon:keyPress(keyType)
 end
 
 return toadPlayer

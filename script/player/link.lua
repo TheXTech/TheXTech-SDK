@@ -27,5 +27,26 @@ function linkPlayer:onTakeNpc(npcObj)
     ProcessPlayerPowerUP(self.plr_obj, npcObj)
 end
 
+function linkPlayer:onKeyPressed(keyType)
+    if( (keyType==KEY_RUN) )then
+        if(not self.plr_obj.isDucking)then
+            self.plr_obj:playAnimationOnce(27, 500, true, true, 0)
+            self.plr_obj:attackArea(10, -45, 10 + 20, -45 + 10,
+                BasePlayer.AttackType_Hit,
+                BaseNPC.DAMAGE_BY_KICK,
+                {1, 3}
+            )
+        else
+            self.plr_obj:playAnimationOnce(30, 500, true, true, 0)
+            self.plr_obj:attackArea(10, -25, 10 + 20, -25 + 10,
+                BasePlayer.AttackType_Hit,
+                BaseNPC.DAMAGE_BY_KICK,
+                {1, 3}
+            )
+        end
+        Audio.playSound(77)
+    end
+end
+
 return linkPlayer
 

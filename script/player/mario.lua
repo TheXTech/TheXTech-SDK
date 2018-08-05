@@ -7,6 +7,8 @@ function marioPlayer:__init(plr_obj)
     elseif(self.plr_obj.stateID>=2)then
         self.plr_obj.health = 2
     end
+    self.raccoon = require("utils/raccoon")
+    self.raccoon:init(self)
 end
 
 function marioPlayer:onLoop(tickTime)
@@ -24,6 +26,7 @@ function marioPlayer:onLoop(tickTime)
             end
         end
     end
+    self.raccoon:loop(tickTime)
 end
 
 function marioPlayer:onHarm(harmEvent)
@@ -43,6 +46,7 @@ function marioPlayer:onKeyPressed(keyType)
         self.plr_obj:playAnimationOnce(7, 128, true, false, 1)
         ShootHammer(self.plr_obj)
     end
+    self.raccoon:keyPress(keyType)
 end
 
 return marioPlayer

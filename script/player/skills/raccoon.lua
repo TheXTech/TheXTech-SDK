@@ -9,9 +9,25 @@ function RaccoonProcessor:init(plr)
     self.tailwhil_in_attack = false
     self.tailwhil_timer = 0
     self.player = plr
+    if(plr.plr_obj.characterID == 3)then
+        self.fallSpeed = 4
+    else
+        self.fallSpeed = 2
+    end
 end
 
 function RaccoonProcessor:loop(tickTime)
+    if((self.player.plr_obj.stateID ~= 4) and (self.player.plr_obj.stateID ~= 5))then
+        return
+    end
+
+    if((not self.player.plr_obj.onGround) and self.player.plr_obj:getKeyState(KEY_JUMP) )then
+        if(self.player.plr_obj.speedY >= self.fallSpeed)then
+            self.player.plr_obj.speedY = self.fallSpeed
+            self.player.plr_obj:setAnimation(15, 128)
+        end
+    end
+
     if(self.tailwhip_in_process)then
         if(self.tailwhil_timer >= TAILWHIP_ATTACK_WAIT)then
             self.tailwhip_in_process = false
@@ -29,8 +45,10 @@ function RaccoonProcessor:loop(tickTime)
 end
 
 function RaccoonProcessor:keyPress(keyType)
-    if( not self.tailwhip_in_process and (self.player.plr_obj.stateID==4 or
-        self.player.plr_obj.stateID==5) and (keyType==KEY_RUN) and (not self.player.plr_obj.isDucking) )then
+    if((self.player.plr_obj.stateID ~= 4) and (self.player.plr_obj.stateID ~= 5))then
+        return
+    end
+    if( not self.tailwhip_in_process and (keyType==KEY_RUN) and (not self.player.plr_obj.isDucking) )then
         self.player.plr_obj:playAnimationOnce(18, 75, true, true, 1)
         Audio.playSoundByRole(SoundRoles.PlayerTail)
         self.tailwhip_in_process = true

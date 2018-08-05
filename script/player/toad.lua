@@ -9,7 +9,7 @@ function toadPlayer:__init(plr_obj)
     elseif(self.plr_obj.stateID>=3)then
         self.plr_obj.health = 3
     end
-    self.raccoon = require("utils/raccoon")
+    self.raccoon = require("player/skills/raccoon")
     self.raccoon:init(self)
 end
 
@@ -18,14 +18,6 @@ function toadPlayer:onLoop(tickTime)
         Renderer.printText("Hii! =)", 100, 230, FontType.DefaultRaster, 15, 0xFFFF0055)
         Renderer.printText("Player x: "..tostring(self.plr_obj.x), 100, 260, FontType.DefaultRaster, 15, 0xFFFF0055)
         Renderer.printText("Player y: "..tostring(self.plr_obj.y), 100, 300, FontType.DefaultRaster, 15, 0xFFFF0055)
-    end
-    if((self.plr_obj.stateID==4) or (self.plr_obj.stateID==5))then
-        if((not self.plr_obj.onGround) and self.plr_obj:getKeyState(KEY_JUMP) )then
-            if(self.plr_obj.speedY>=3)then
-                self.plr_obj.speedY=3
-                self.plr_obj:setAnimation(15, 128)
-            end
-        end
     end
     self.raccoon:loop(tickTime)
 end

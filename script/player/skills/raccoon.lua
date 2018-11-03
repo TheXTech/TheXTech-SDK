@@ -1,19 +1,35 @@
 class 'RaccoonProcessor'
 
 -- Raccoon timers
-local TAILWHIP_ATTACK_MOMENT = 50
-local TAILWHIP_ATTACK_WAIT = 240
+local TAILWHIP_ATTACK_MOMENT = 1
+local TAILWHIP_ATTACK_WAIT = 300
+
+-- TODO: Implement flight-ability on reaching max speed of run
 
 function RaccoonProcessor:init(plr)
     self.tailwhip_in_process = false
     self.tailwhil_in_attack = false
     self.tailwhil_timer = 0
-    self.player = plr
+
+    local plW = (plr.plr_obj.width / 2);
+    self.tail_l = plW
+    self.tail_r = plW + 19
+    self.tail_t = -26
+    self.tail_b = -13
+
+    -- Raocow beats 4 pixels lower
+    if(plr.plr_obj.characterID == 4)then
+        self.tail_t = -22
+        self.tail_b = -9
+    end
+    -- Kood falls faster
     if(plr.plr_obj.characterID == 3)then
         self.fallSpeed = 4
     else
         self.fallSpeed = 2
     end
+
+    self.player = plr
 end
 
 function RaccoonProcessor:loop(tickTime)
@@ -32,14 +48,19 @@ function RaccoonProcessor:loop(tickTime)
         if(self.tailwhil_timer >= TAILWHIP_ATTACK_WAIT)then
             self.tailwhip_in_process = false
         end
-        if(self.tailwhil_in_attack and self.tailwhil_timer >= TAILWHIP_ATTACK_MOMENT)then
-            self.tailwhil_in_attack = false
-            self.player.plr_obj:attackArea(10, -25, 10 + 20, -25 + 10,
+        -- if(self.tailwhil_in_attack and self.tailwhil_timer >= TAILWHIP_ATTACK_MOMENT)then
+        --    self.tailwhil_in_attack = false
+
+        -- reduce width of tail hitzone with speed, use abs of self.player.plr_obj.speedX, then calculate offset:
+        -- bigger speed, nearer offset
+
+        -- spam attack zone until timeout
+            self.player.plr_obj:attackArea(self.tail_l, self.tail_t, self.tail_r, self.tail_b,
                 BasePlayer.AttackType_Hit,
                 BaseNPC.DAMAGE_BY_KICK,
                 {1, 3}
             )
-        end
+        -- end
         self.tailwhil_timer = self.tailwhil_timer + tickTime
     end
 end

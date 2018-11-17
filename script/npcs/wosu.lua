@@ -1,12 +1,12 @@
-class 'tinsuit'
+class 'wosu'
 
-function tinsuit:initProps()
+function wosu:initProps()
     -- Animation properties
     self.animateOne = {0}
     self.animateTwo = {1}
 end
 
-function tinsuit:__init(npc_obj)
+function wosu:__init(npc_obj)
     self.npc_obj = npc_obj
     self.cur_frame = false
     self.def_normalJumpsSpeedY = -3.5
@@ -14,11 +14,11 @@ function tinsuit:__init(npc_obj)
     self:initProps()
 end
 
-function tinsuit:onActivated()
+function wosu:onActivated()
     self:initProps()
 end
 
-function tinsuit:onLoop(tickTime)
+function wosu:onLoop(tickTime)
     if(self.npc_obj.onGround and not self.touchGround) then
             self.npc_obj.speedY = self.def_normalJumpsSpeedY
             if(self.cur_frame)then
@@ -33,5 +33,5 @@ function tinsuit:onLoop(tickTime)
     end
 end
 
-return tinsuit
+return wosu
 

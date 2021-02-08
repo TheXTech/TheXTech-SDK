@@ -9,29 +9,29 @@ function onConfigure()
 {
     var smbxPath = FileIO.scriptPath();
     var SMBXExeName = "smbx.exe";
-    
-    if(!FileIO.isFileExists(FileIO.scriptPath()+"/main.ini"))
+
+    if(!FileIO.isFileExists(FileIO.scriptPath() + "/main.ini"))
     {
-        PGE.msgBoxError( "ERROR OF INI FILE!", 
+        PGE.msgBoxError( "ERROR OF INI FILE!",
                                "Configuratiog package seems damaged.\n"+
                                "Impossible to find main.ini!");
         return false;
     }
-    
+
     var ini = INI.open( FileIO.scriptPath()+"/main.ini");
 
     while(1)
     {
-        smbxPath = FileIO.getOpenDirPath("Please select your directory with installed SMBX to set up the SMBX Integration configuration package...", smbxPath );
+        smbxPath = FileIO.getOpenDirPath("Please select your directory with installed SMBX or TheXTech to set up the SMBX Integration configuration package...", smbxPath );
         if(smbxPath=="")
         {
-            PGE.msgBoxWarning("Configuring has been canceled", 
+            PGE.msgBoxWarning("Configuring has been canceled",
             "You was canceled a configuring of the\n'SMBX Intergation configuration package'!\n"+
-            "To take able use it, you should choice the path to your installed SMBX.\n\n"+
+            "To take able use it, you should choice the path to your installed SMBX or TheXTech.\n\n"+
             "SMBX Integration config pack was not configured!" );
             return false;
         }
-        
+
         try
         {
             //Attempt to detect SMBX directory
@@ -39,7 +39,7 @@ function onConfigure()
                 throw("'"+smbxPath+"/graphics"+"' directory not exists");
             if(!FileIO.isDirExists(smbxPath+"/graphics/npc"))
                 throw("'"+smbxPath+"/graphics/npc"+"' directory not exists");
-            
+
             var smbxEXENames = [
                 "smbx.legacy",
                 "smbx.exe.legacy",
@@ -48,9 +48,15 @@ function onConfigure()
                 "smbx13.exe",
                 "asmbxt.exe",
                 "a2mbxt.exe",
-                "a2xt.exe"
+                "a2xt.exe",
+                "smbx-win64.exe",
+                "thextech.exe",
+                "advdemo.exe",
+                "smbx",
+                "thextech",
+                "advdemo",
                 ];
-            
+
             for(var i=0; i<smbxEXENames.length; i++)
             {
                 if(FileIO.isFileExists(smbxPath+"/"+smbxEXENames[i]))
@@ -59,32 +65,32 @@ function onConfigure()
                     break;
                 }
             }
-            
+
             ini.beginGroup("main");
             ini.setValue("application-path", smbxPath);
             ini.setValue("smbx-exe-name", SMBXExeName);
             ini.setValue("application-dir", 1);
-            
+
             ini.setValue("graphics-level", "graphics");
             ini.setValue("graphics-worldmap", "graphics");
             ini.setValue("graphics-characters", "graphics");
-            
+
             ini.setValue("application-path-configured", true);
-            
+
             if(FileIO.isDirExists(smbxPath+"/music"))
                 ini.setValue("music", "music");
             else if(FileIO.isDirExists(smbxPath+"/music_ogg"))
                 ini.setValue("music", "music_ogg");
-            
+
             if(FileIO.isDirExists(smbxPath+"/sound"))
                 ini.setValue("sound", "sound");
             else if(FileIO.isDirExists(smbxPath+"/sound_ogg"))
                 ini.setValue("sound", "sound_ogg");
-            
+
             ini.close();
-            
+
             //  Generate dummy elements gifs needed for PGE
-            
+
             /*
             Total worldmap tiles usable: "tile-1" to "tile-400" (tile 401 is not usable anymore). There are 72 new tiles.
             Total paths usable: "path-1" to "path-100" (path 101 is not usable anymore). There are 68 new paths, all using a mask/transparency.
@@ -94,13 +100,13 @@ function onConfigure()
             Total BGOs usable: "background-1" to "background-200" (background 201 is not usable anymore). There are 10 new BGOs which are all using a mask/transparency.
             There are no additional level-backgrounds ("background2-XX") usable, though.
             */
-    
+
             for(var i=292; i<=300; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-npc.gif";
                 var outputfile = smbxPath+"/graphics/npc/npc-" + i + ".gif";
                 FileIO.copy( inputfile, outputfile, false );
-                
+
                     inputfile = FileIO.scriptPath()+"/commonGFX/dummy-npcm.gif";
                     outputfile = smbxPath+"/graphics/npc/npc-" + i + "m.gif";
                 FileIO.copy( inputfile, outputfile, false );
@@ -244,14 +250,14 @@ function onConfigure()
         }
         catch(e)
         {
-            PGE.msgBoxWarning( "SMBX Integration configuration error", 
+            PGE.msgBoxWarning( "SMBX Integration configuration error",
                                "This is a not SMBX directory!\nPlease try again!\n" + e);
             continue;
         }
         break;
     }
-    
-    PGE.msgBoxInfo( "SMBX Integration configured", 
+
+    PGE.msgBoxInfo( "SMBX Integration configured",
                     "Integration configuration pack successfully configured!\n"+
                     "SMBX path is:\n" + smbxPath + "/" + SMBXExeName);
 

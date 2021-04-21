@@ -41,13 +41,13 @@ function onConfigure()
                 throw("'"+smbxPath+"/graphics/npc"+"' directory not exists");
 
             var smbxEXENames = [
+                "smbx",
+                "thextech",
+                "advdemo",
                 "smbx.exe",
                 "smbx-win64.exe",
                 "thextech.exe",
-                "advdemo.exe",
-                "smbx",
-                "thextech",
-                "advdemo"
+                "advdemo.exe"
             ];
 
             for(var i=0; i < smbxEXENames.length; i++)
@@ -71,6 +71,61 @@ function onConfigure()
             ini.setValue("application-path-configured", true);
 
             ini.close();
+
+            //  Generate dummy elements gifs needed for PGE
+
+            /*
+            Total worldmap tiles usable: "tile-1" to "tile-400" (tile 401 is not usable anymore). There are 72 new tiles.
+            Total paths usable: "path-1" to "path-100" (path 101 is not usable anymore). There are 68 new paths, all using a mask/transparency.
+            Total levels usable: "level-1" to "level-100" (level 101 is not usable anymore). There are 68 new levels, all using a mask/transparency.
+            Total sceneries usable: "scene-1" to "scene-100" (scene 101 is not usable anymore). There are 35 new sceneries, all using a mask/transparency.
+            Total blocks usable: "block-1" to "block-700" (block 701 is not usable anymore). There are 62 new blocks which are all using a mask/transparency.
+            Total BGOs usable: "background-1" to "background-200" (background 201 is not usable anymore). There are 10 new BGOs which are all using a mask/transparency.
+            There are no additional level-backgrounds ("background2-XX") usable, though.
+            */
+
+            for(var i=292; i<=300; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-npc.png";
+                var outputfile = smbxPath+"/graphics/npc/npc-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=639; i<=700; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-block.png";
+                var outputfile = smbxPath+"/graphics/block/block-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=191; i<=200; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_bgo.png";
+                var outputfile = smbxPath+"/graphics/background/background-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=329; i<=400; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_tile.png";
+                var outputfile = smbxPath+"/graphics/tile/tile-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=66; i<=100; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_scene.png";
+                var outputfile = smbxPath+"/graphics/scene/scene-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=33; i<=100; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_path.png";
+                var outputfile = smbxPath+"/graphics/path/path-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
+            for(var i=33; i<=100; i++)
+            {
+                var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_wlvl.png";
+                var outputfile = smbxPath+"/graphics/level/level-" + i + ".png";
+                FileIO.copy( inputfile, outputfile, false );
+            }
         }
         catch(e)
         {

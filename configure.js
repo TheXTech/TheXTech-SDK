@@ -44,6 +44,8 @@ function onConfigure()
                 "smbx",
                 "thextech",
                 "advdemo",
+                "a2xtech",
+                "a2xtech-bin",
                 "smbx.exe",
                 "smbx-win64.exe",
                 "thextech.exe",
@@ -84,6 +86,7 @@ function onConfigure()
             There are no additional level-backgrounds ("background2-XX") usable, though.
             */
 
+            /*
             for(var i=292; i<=300; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-npc.png";
@@ -125,7 +128,7 @@ function onConfigure()
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_wlvl.png";
                 var outputfile = smbxPath+"/graphics/level/level-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
-            }
+            }*/
         }
         catch(e)
         {

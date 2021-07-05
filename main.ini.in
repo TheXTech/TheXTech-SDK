@@ -1,0 +1,65 @@
+[main]
+config_name = "SMBX/TheXTech SDK"
+config_desc = "The development kit for Super Mario Bros. X game TheXTech version"
+enable-version-notify = true
+pge-editor-version="0.3.1.14"
+pge-engine-version="0.3.0.1-alpha"
+api-version = 41
+home-page = "http://wohlsoft.ru/config_packs/pack_info.php?pack=XTechSDK_SMBX/"
+
+local-script-name-lvl="lunadll.lua"
+common-script-name-lvl="lunaworld.lua"
+local-script-name-wld="lunaoverworld.lua"
+common-script-name-wld="lunaworld.lua"
+
+;find data relative application dir instead relative to config dir
+application-dir = 1
+
+;;;;;;;; PUT PATH TO SMBX HERE ;;;;;;;;;;
+application-path = <NEED TO RUN configure.js!!!>
+
+;;;;;;;; PUT PATH TO SMBX HERE ;;;;;;;;;;
+worlds = "worlds"	;Worlds folder
+music = "music"
+sound = "sound"
+graphics-level = "graphics"
+graphics-worldmap = "graphics"
+graphics-characters = "graphics"
+graphics-common = "../commonGFX"
+
+;Custom data path [reserved]
+custom-data = "data-custom"
+
+; This option will disable using of non-SMBX features for created games with this config.
+; Saved files compatible with SMBX 1.3
+; If you set this option to 0, you can read SMBX files, but you will lose data on try to save in SMBX format
+; and will get bugs in render, if you will try saved file in SMBX
+smbx-compatible = 1
+
+; Use TheXTech as a default runtime engine for SMBX 1.3 compatible episodes
+default-engine-type = "xtech"
+; Allow optional playing of levels in different engines
+hide-non-default-engines = false
+
+[graphics]
+default-grid = 32		;You can define any grid size for your game
+
+
+[gui]
+default-theme = "SMBX2 Default"
+editor-splash = "commonGFX/editor_splash_xtech.png"
+animations = 2
+
+
+[splash-animation-1]
+image = "commonGFX/coin.png"
+frames = 4
+speed = 78
+x = 416
+y = 242
+
+
+[splash-animation-2]
+image = "commonGFX/big_splash_loading.png"
+x = 284
+y = 256

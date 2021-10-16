@@ -18,12 +18,12 @@ function onConfigure()
         return false;
     }
 
-    var ini = INI.open(FileIO.scriptPath() + "/main.ini");
+    var ini = INI.open(FileIO.configSettingFile());
 
     while(1)
     {
-        smbxPath = FileIO.getOpenDirPath("Please select your directory with installed SMBX/TheXTech to set up the XTech SDK configuration package...", smbxPath );
-        if(smbxPath=="")
+        smbxPath = FileIO.getOpenDirPath("Please select your directory with installed SMBX/TheXTech to set up the TheXTech SDK configuration package...", smbxPath);
+        if(smbxPath === "")
         {
             PGE.msgBoxWarning("Configuring has been canceled",
             "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
@@ -35,10 +35,11 @@ function onConfigure()
         try
         {
             //Attempt to detect SMBX directory
-            if(!FileIO.isDirExists(smbxPath+"/graphics"))
-                throw("'"+smbxPath+"/graphics"+"' directory not exists");
-            if(!FileIO.isDirExists(smbxPath+"/graphics/npc"))
-                throw("'"+smbxPath+"/graphics/npc"+"' directory not exists");
+            if(!FileIO.isDirExists(smbxPath + "/graphics"))
+                throw("'" + smbxPath + "/graphics" + "' directory not exists");
+
+            if(!FileIO.isDirExists(smbxPath + "/graphics/npc"))
+                throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
 
             var smbxEXENames = [
                 "smbx",
@@ -52,9 +53,9 @@ function onConfigure()
                 "advdemo.exe"
             ];
 
-            for(var i=0; i < smbxEXENames.length; i++)
+            for(var i = 0; i < smbxEXENames.length; i++)
             {
-                if(FileIO.isFileExists(smbxPath+"/"+smbxEXENames[i]))
+                if(FileIO.isFileExists(smbxPath + "/" + smbxEXENames[i]))
                 {
                     SMBXExeName = smbxEXENames[i];
                     break;
@@ -69,12 +70,10 @@ function onConfigure()
             ini.setValue("graphics-level", "graphics");
             ini.setValue("graphics-worldmap", "graphics");
             ini.setValue("graphics-characters", "graphics");
-
             ini.setValue("application-path-configured", true);
-
             ini.close();
 
-            //  Generate dummy elements gifs needed for PGE
+            //  Generate dummy elements gifs needed for Moondust
 
             /*
             Total worldmap tiles usable: "tile-1" to "tile-400" (tile 401 is not usable anymore). There are 72 new tiles.

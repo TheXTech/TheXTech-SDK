@@ -8,7 +8,7 @@ Take config pack for latest release version of Moondust Project take latest vers
 
 # How to install
 * Make a folder "TheXTech SDK" or any other (no matter) in the "configs" folder in the root of Moondust Project folder
-(or in the PGE user data directory).
+(or in the Moondust user data directory).
 * Put contents of this repository into it
 
 **Note:** Moondust Editor 0.3.2.1 is required

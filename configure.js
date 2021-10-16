@@ -1,9 +1,9 @@
 /*
-A configure script required to working of SMBX Integration configuration package
-*/
+ * A configure script required to working of TheXTech SDK configuration package
+ */
 
 /**
- * A main function called by PGE Editor to request configuring process
+ * A main function called by Moondust Editor to request configuring process
  */
 function onConfigure()
 {

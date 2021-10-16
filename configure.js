@@ -22,12 +22,12 @@ function onConfigure()
 
     while(1)
     {
-        smbxPath = FileIO.getOpenDirPath("Please select your directory with installed SMBX/TheXTech to set up the TheXTech SDK configuration package...", smbxPath);
+        smbxPath = FileIO.getOpenDirPath("Select TheXTech-compatible assets directory...", smbxPath);
         if(smbxPath === "")
         {
             PGE.msgBoxWarning("Configuring has been canceled",
             "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
-            "To take able use it, you should choice the path to your installed SMBX/TheXTech.\n\n"+
+            "To take able use it, you should choice the path to your installed TheXTech.\n\n"+
             "TheXTech SDK config pack was not configured!" );
             return false;
         }
@@ -139,8 +139,9 @@ function onConfigure()
     }
 
     PGE.msgBoxInfo( "TheXTech SDK configured",
-                    "Integration configuration pack successfully configured!\n"+
-                    "TheXTech path is:\n" + smbxPath + "/" + SMBXExeName);
+                    "Integration configuration pack successfully configured!\n\n"+
+                    "TheXTech assets path is: " + smbxPath + "\n" +
+                    "Default executable name (can be changed at test settings): " + SMBXExeName);
 
     return true;
 }

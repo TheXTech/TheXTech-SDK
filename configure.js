@@ -8,7 +8,7 @@
 function onConfigure()
 {
     var smbxPath = FileIO.scriptPath();
-    var SMBXExeName = "smbx.exe";
+    var executableName = "smbx.exe";
 
     if(!FileIO.isFileExists(FileIO.scriptPath() + "/main.ini"))
     {
@@ -41,7 +41,7 @@ function onConfigure()
             if(!FileIO.isDirExists(smbxPath + "/graphics/npc"))
                 throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
 
-            var smbxEXENames = [
+            var executableNames = [
                 "smbx",
                 "thextech",
                 "advdemo",
@@ -50,21 +50,22 @@ function onConfigure()
                 "smbx.exe",
                 "smbx-win64.exe",
                 "thextech.exe",
-                "advdemo.exe"
+                "advdemo.exe",
+                "debug.sh"          // <- Custom debug runner overlay on Linux
             ];
 
-            for(var i = 0; i < smbxEXENames.length; i++)
+            for(var i = 0; i < executableNames.length; i++)
             {
-                if(FileIO.isFileExists(smbxPath + "/" + smbxEXENames[i]))
+                if(FileIO.isFileExists(smbxPath + "/" + executableNames[i]))
                 {
-                    SMBXExeName = smbxEXENames[i];
+                    executableName = executableNames[i];
                     break;
                 }
             }
 
             ini.beginGroup("main");
             ini.setValue("application-path", smbxPath);
-            ini.setValue("smbx-exe-name", SMBXExeName);
+            ini.setValue("executable-name", executableName);
             ini.setValue("application-dir", 1);
 
             ini.setValue("graphics-level", "graphics");
@@ -141,7 +142,7 @@ function onConfigure()
     PGE.msgBoxInfo( "TheXTech SDK configured",
                     "Integration configuration pack successfully configured!\n\n"+
                     "TheXTech assets path is: " + smbxPath + "\n" +
-                    "Default executable name (can be changed at test settings): " + SMBXExeName);
+                    "Default executable name (can be changed at test settings): " + executableName);
 
     return true;
 }

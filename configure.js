@@ -22,45 +22,104 @@ function onConfigure()
 
     while(1)
     {
-        smbxPath = FileIO.getOpenDirPath("Select TheXTech-compatible assets directory...", smbxPath);
+        if(System.osName() == "macos")
+            smbxPath = FileIO.getOpenFilePath("Select the TheXTech-based application...", smbxPath, "Applications (*.app)");
+        else
+            smbxPath = FileIO.getOpenDirPath("Select TheXTech-compatible assets directory...", smbxPath);
+
         if(smbxPath === "")
         {
             PGE.msgBoxWarning("Configuring has been canceled",
             "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
             "To take able use it, you should choice the path to your installed TheXTech.\n\n"+
-            "TheXTech SDK config pack was not configured!" );
+            "TheXTech SDK config pack was not configured!");
             return false;
         }
 
         try
         {
-            //Attempt to detect SMBX directory
-            if(!FileIO.isDirExists(smbxPath + "/graphics"))
-                throw("'" + smbxPath + "/graphics" + "' directory not exists");
-
-            if(!FileIO.isDirExists(smbxPath + "/graphics/npc"))
-                throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
-
-            var executableNames = [
-                "smbx",
-                "thextech",
-                "advdemo",
-                "a2xtech",
-                "a2xtech-bin",
-                "smbx.exe",
-                "smbx-win64.exe",
-                "thextech.exe",
-                "advdemo.exe",
-                "debug.sh"          // <- Custom debug runner overlay on Linux
-            ];
-
-            for(var i = 0; i < executableNames.length; i++)
+            var executableNames;
+            
+            if(System.osName() == "macos")
             {
-                if(FileIO.isFileExists(smbxPath + "/" + executableNames[i]))
+                executableNames =
+                [
+                    "Super Mario Bros. X.app",
+                    "Adventures of Demo.app",
+                    "TheXTech.app",
+                ];
+            }
+            else if(System.osName() == "windows")
+            {
+                executableNames =
+                [
+                    "smbx.exe",
+                    "smbx-win64.exe",
+                    "thextech.exe",
+                    "advdemo.exe",
+                ];
+            }
+            else // Any other systems
+            {
+                executableNames =
+                [
+                    "smbx",
+                    "thextech",
+                    "advdemo",
+                    "a2xtech",
+                    "a2xtech-bin",
+                    "debug.sh"      // <- Custom debug runner overlay on Linux
+                ];
+            }
+
+            if(System.osName() == "macos")
+                executableName = smbxPath + "/Contents/MacOS/TheXTech"
+            else
+            {
+                for(var i = 0; i < executableNames.length; i++)
                 {
-                    executableName = executableNames[i];
-                    break;
+                    if(FileIO.isFileExists(smbxPath + "/" + executableNames[i]))
+                    {
+                        executableName = executableNames[i];
+                        break;
+                    }
                 }
+            }
+
+            //Attempt to detect SMBX directory
+            if(System.osName() == "macos")
+            {
+                var dirFound = false;
+                var assetsPaths = 
+                [
+                    // Built-in assets of the app bundle
+                    smbxPath + "/Contents/Resources/assets",
+                    // Game specific assets
+                    "~/TheXTech Games/" + FileIO.getBundleName(smbxPath),
+                    // Debug assets used with a debug version of the game
+                    "~/TheXTech Games/Debug Assets"
+                ];
+
+                for(var i = 0; i < assetsPaths.length; i++)
+                {
+                    if(FileIO.isDirExists(assetsPaths[i] + "/graphics") && FileIO.isDirExists(assetsPaths[i] + "/graphics/npc"))
+                    {
+                        dirFound = true;
+                        smbxPath = assetsPaths[i];
+                        break;
+                    }
+                }
+
+                if(!dirFound)
+                    throw("The application '" + smbxPath + "' doesn't contain requires resources");
+            }
+            else
+            {
+                if(!FileIO.isDirExists(smbxPath + "/graphics"))
+                    throw("'" + smbxPath + "/graphics" + "' directory not exists");
+
+                if(!FileIO.isDirExists(smbxPath + "/graphics/npc"))
+                    throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
             }
 
             ini.beginGroup("main");

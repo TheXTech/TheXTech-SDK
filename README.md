@@ -26,7 +26,7 @@ Please don't use any copyrighted stuff which you have in commercial purposes.
 * Double-click it to extract it
 
 # How to configure it
-After you installed the configuration package, feel free to run the Moondust Editor. Once you started "TheXTech SDK" configuration package a first time, you will get the question about configuring it. Answer **Yes**. Then, you will need to select the directory that contains resources of TheXTech game. On macOS, you should select the Application of TheXTech-based game (Super Mario Bros. X, Adventures of Demo, etc.). Once you selected the valid location, the final message will appear, and Editor will start its normal work.
+After you installed the configuration package, feel free to run the Moondust Editor. Once you started "TheXTech SDK" configuration package a first time, you will get the question about configuring it. Answer **Yes**. Then, you will need to select the directory that contains resources of TheXTech-based game. On macOS, you should select the Application of TheXTech-based game (Super Mario Bros. X, Adventures of Demo, etc.). Once you selected the valid location, the final message will appear, and Editor will start its normal work.
 
 # Troubleshooting
 If you got any questions or you found a bug, you can join the official Discord server of the Moondust Project community: https://wohlsoft.ru/chat/chat_discord.php or visit the official community forum: https://wohlsoft.ru/forum/

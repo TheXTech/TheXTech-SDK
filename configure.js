@@ -23,9 +23,17 @@ function onConfigure()
     while(1)
     {
         if(System.osName() == "macos")
+        {
+            PGE.msgBoxInfo("TheXTech SDK setup",
+                           "In order to start using the TheXTech SDK, you should select an application bundle that contains a complete TheXTech-based game that has game assets presented.");
             smbxPath = FileIO.getOpenFilePath("Select the TheXTech-based application...", smbxPath, "Applications (*.app)");
+        }
         else
-            smbxPath = FileIO.getOpenDirPath("Select TheXTech-compatible assets directory...", smbxPath);
+        {
+            PGE.msgBoxInfo("TheXTech SDK setup",
+                           "In order to start using the TheXTech SDK, you should select a complete game directory that contains an executable of TheXTech and game assets presented. You also can select the assets directory without an executable. However, you will need to select the executable file path separately at the \"Test\" -> \"TheXTech\" menu.");
+            smbxPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", smbxPath);
+        }
 
         if(smbxPath === "")
         {
@@ -39,7 +47,7 @@ function onConfigure()
         try
         {
             var executableNames;
-            
+
             if(System.osName() == "macos")
             {
                 executableNames =
@@ -90,7 +98,7 @@ function onConfigure()
             if(System.osName() == "macos")
             {
                 var dirFound = false;
-                var assetsPaths = 
+                var assetsPaths =
                 [
                     // Built-in assets of the app bundle
                     smbxPath + "/Contents/Resources/assets",
@@ -192,7 +200,7 @@ function onConfigure()
         catch(e)
         {
             PGE.msgBoxWarning( "TheXTech SDK configuration error",
-                               "This is a not TheXTech directory!\nPlease try again!\n" + e);
+                               "This is a not TheXTech Game directory!\nPlease try again!\n" + e);
             continue;
         }
         break;

@@ -1,0 +1,14 @@
+{
+    "style" : "groupbox",
+    "title" : "TheXTech Setup",
+    "layout" : [
+        {
+            "control" : "checkBox",
+            "name" : "is_subhub",
+            "title" : "Is a sub-hub",
+            "title-ru" : "Промежуточный корридор",
+            "tooltip" : "This option turns this level into a hub level:\nit's will be possible to resume the game on it,\nsave the game, and return to here after a fail to play\none of other levels.",
+            "tooltip-ru" : "Данная настройка превращает уровень в промежуточный корридор:\nбудет возможно продолжить игру от сюда, сохранить игру прямо здесь,\nа также сюда вернётся игровой персонаж\nпосле неудачной попытки сыграть в один из уровней."
+        }
+    ]
+}

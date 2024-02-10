@@ -1,0 +1,69 @@
+{
+	"style" : "frame",
+	"title" : "Section Settings",
+	"layout": [{
+			"control": "group",
+			"name": "darkness",
+			"title": "Darkness",
+			"children": [{
+						"control": "checkbox",
+						"name": "enableDarkness",
+						"title": "Dark",
+						"tooltip": "Enable this to turn this section into a dark section (supported only at OpenGL feature level 3 and higher).",
+						"text-visible": false,
+						"value-default": false
+						},
+						{
+						"control": "color",
+						"name": "ambient",
+						"title": "Ambient Light",
+						"tooltip": "The color of the darkness, when no light is present.",
+						"value-default": "#181828"
+						},
+						{
+						"control": "comboBox",
+						"name": "shadowType",
+						"title": "Shadow Type",
+						"tooltip": "Which type of shadow casting to use (please note that ray shadows are very resource intensive, and may cause lag).",
+						"elements": ["None", "Ray Shadows", "Drop Shadows"],
+						"value-default": 0
+						},
+						{
+						"control": "spinBox",
+						"name": "shadowStrength",
+						"title": "Shadow Strength",
+						"tooltip": "How soft shadows should be (softer drop shadows are more resource intensive).",
+						"type": "double",
+						"value-min": 0.01,
+						"value-max": 1.00,
+						"value-default": 0.5,
+						"decimals": 2
+						}]
+			},
+			{
+				"control": "group",
+				"name": "effects",
+				"title": "Effects",
+				"children": [{
+								"control": "string",
+								"name": "fgParticles",
+								"title": "Foreground Particles",
+								"tooltip": "Name of the particle system to draw above the section and below the HUD (supported only at OpenGL feature level 2 and higher).",
+								"value-default": ""
+							},
+							{
+								"control": "string",
+								"name": "bgParticles",
+								"title": "Background Particles",
+								"tooltip": "Name of the particle system to draw above the background and below the section objects (supported only at OpenGL feature level 2 and higher).",
+								"value-default": ""
+							},
+							{
+								"control": "string",
+								"name": "screenEffect",
+								"title": "Screen Effect",
+								"tooltip": "Name of the screen effect to draw above the section and below the HUD (supported only at OpenGL feature level 2 and higher).",
+								"value-default": ""
+							}]
+			}]
+}

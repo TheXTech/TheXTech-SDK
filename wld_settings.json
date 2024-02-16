@@ -4,14 +4,6 @@
     "title-ru" : "Доп-настройки для TheXTech",
     "layout" : [
         {
-            "control" : "checkBox",
-            "name" : "save_on_any_level",
-            "title" : "Allow save on any level",
-            "title-ru" : "Сохранение на любых уровнях",
-            "tooltip" : "This option allows player to save the game and resume it at any level of the episode.\nUse this option if you want to make the chain of levels without hubs and world maps.",
-            "tooltip-ru" : "Данная опция позволяет игроку сохранять и возобновлять игру на абсолютно любом уровне эпизода.\nДанную опцию можно использовать, если есть необходимость создать цепочку уровней без корридоров и карт мира."
-        },
-        {
             "control": "levelFileArray",
             "name": "sub_hubs_list",
             "title": "List of sub-hub levels",

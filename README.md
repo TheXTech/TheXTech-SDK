@@ -13,12 +13,12 @@ Please don't use any copyrighted stuff which you have in commercial purposes.
 **Note:** Moondust Editor 0.3.2.1 and newer is required
 
 ## Windows, Linux, Haiku, xBSD
-* [Download the content of this repository](https://github.com/Wohlstand/TheXTech-SDK/archive/refs/heads/main.zip)
+* [Download the content of this repository](https://github.com/TheXTech/TheXTech-SDK/archive/refs/heads/main.zip)
 * Open the **"configs"** directory in the root of the Moondust Project directory (or in the Moondust user data directory such as `%UserProfile%\.PGE_Project` or `~/.PGE_Project` if running a non-portable build). If "configs" directory doesn't exist, create it.
 * Extract downloaded archive into the **configs** directory
 
 ## macOS
-* [Download the content of this repository](https://github.com/Wohlstand/TheXTech-SDK/archive/refs/heads/main.zip)
+* [Download the content of this repository](https://github.com/TheXTech/TheXTech-SDK/archive/refs/heads/main.zip)
 * If you downloaded Moondust Devkit a first time, please run the Moondust Editor application after unpacking the directory. It will show an error that there is no installed configuration packages. Don't worry, it's fine, just close it, and follow the next step.
 * Open the Finder
 * Press **Cmd + Shift + G**, paste the `~/Library/Application Support/PGE Project/configs` line and press **ENTER**

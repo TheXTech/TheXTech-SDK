@@ -11,7 +11,7 @@
             "title-ru": "Список промежуточных коридоров",
             "title-zh-cn": "中心关卡子区域列表",
             "value-default": [],
-            "tooltip" : "There are levels where player can save the game,\nand resume on them at any moment,\neven episode uses the world map.",
+            "tooltip" : "There are levels where player can save the game,\nand resume on them at any moment,\neven if the episode uses the world map.",
             "tooltip-ru" : "Это уровни, на которых игрок сможет сохранить игру,\nа также возобновить игру на них в любой момент,\nдаже если эпизод использует карту мира.",
             "tooltip-zh-cn" : "玩家在该列表内的关卡可以存档或随时继续游戏，\n即使您使用大地图，也可以添加关卡到此列表中。"
         },

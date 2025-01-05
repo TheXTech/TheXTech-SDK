@@ -20,17 +20,17 @@
             "name" : "custom_intro",
             "title" : "Custom main menu intro",
             "title-ru" : "Особая заставка для главного меню",
-	    "title-zh-cn" : "自定义标题背景",
+            "title-zh-cn" : "自定义标题背景",
             "children" : [
                 {
                     "control" : "levelFile",
                     "name" : "intro_path",
                     "title" : "Level or directory",
                     "title-ru" : "Уровень или папка:",
-		    "title-zh-cn" : "标题背景关卡或文件夹：",
+                    "title-zh-cn" : "标题背景关卡或文件夹：",
                     "tooltip" : "Please choice the single level file\nor type a directory name that contains multiple level files.\nIf you use one level file,\nit will be played at background of the main menu,\nbut if you select a directory, every level\nin that directory will be opened at the main menu randomly every time.",
                     "tooltip-ru" : "Пожалуйста выберите один файл уровня или введите имя директории,\nкоторая содержит несколько файлов уровней.\nЕсли выбрать один файл, то он будет играться фоном в главном меню игры,\nно если вы укажите директорию, то каждый уровень из директории\nбудет открывтаься в главном меню, каждый раз случайный.",
-		    "tooltip-zh-cn" : "请选择用于标题背景关卡的文件或文件夹。\n如果您选择的是关卡文件，则显示唯一的标题背景。\n如果您选择的是文件夹，则每次进入标题画面时，\n在相应文件夹中随机选取一个关卡文件作为标题背景。",
+                    "tooltip-zh-cn" : "请选择用于标题背景关卡的文件或文件夹。\n如果您选择的是关卡文件，则显示唯一的标题背景。\n如果您选择的是文件夹，则每次进入标题画面时，\n在相应文件夹中随机选取一个关卡文件作为标题背景。",
                     "value-default" : "",
                     "directory" : "episode"
                 }
@@ -41,17 +41,17 @@
             "name" : "custom_outro",
             "title" : "Custom credits scene",
             "title-ru" : "Особая заставка для экрана титров",
-	    "title-zh-cn" : "自定义结局背景",
+            "title-zh-cn" : "自定义结局背景",
             "children" : [
                 {
                     "control" : "levelFile",
                     "name" : "outro_path",
                     "title" : "Outro level",
                     "title-ru" : "Уровень титров:",
-		    "title-zh-cn" : "结局背景关卡：",
+                    "title-zh-cn" : "结局背景关卡：",
                     "tooltip" : "Please choose a level file that will be played at background of the credits screen when completing this episode.",
                     "tooltip-ru" : "Пожалуйста выберите файл уровня, который будет играться фоном на экране титров после прохождения этого эпизода.",
-		    "tooltip-zh-cn" : "请选择用于地图通关之后，显示制作团队时的背景的关卡文件。",
+                    "tooltip-zh-cn" : "请选择用于地图通关之后，显示制作团队时的背景的关卡文件。",
                     "value-default" : "",
                     "directory" : "episode"
                 }

@@ -14,6 +14,42 @@
             "tooltip" : "There are levels where player can save the game,\nand resume on them at any moment,\neven episode uses the world map.",
             "tooltip-ru" : "Это уровни, на которых игрок сможет сохранить игру,\nа также возобновить игру на них в любой момент,\nдаже если эпизод использует карту мира.",
             "tooltip-zh-cn" : "玩家在该列表内的关卡可以存档或随时继续游戏，\n即使您使用大地图，也可以添加关卡到此列表中。"
+        },
+        {
+            "control" : "group",
+            "name" : "custom_intro",
+            "title" : "Custom main menu intro",
+            "title-ru" : "Особая заставка для главного меню",
+            "children" : [
+                {
+                    "control" : "levelFile",
+                    "name" : "intro_path",
+                    "title" : "File or directory",
+                    "title-ru" : "Файл или папка:",
+                    "tooltip" : "Please choice the single level file\nor type a directory name that contains multiple level files.\nIf you use one level file,\nit will be played at background of the main menu,\nbut if you select a directory, every level\nin that directory will be opened at the main menu randomly every time.",
+                    "tooltip-ru" : "Пожалуйста выберите один файл уровня или введите имя директории,\nкоторая содержит несколько файлов уровней.\nЕсли выбрать один файл, то он будет играться фоном в главном меню игры,\nно если вы укажите директорию, то каждый уровень из директории\nбудет открывтаься в главном меню, каждый раз случайный.",
+                    "value-default" : "",
+                    "directory" : "episode"
+                }
+            ]
+        },
+        {
+            "control" : "group",
+            "name" : "custom_outro",
+            "title" : "Custom credits scene",
+            "title-ru" : "Особая заставка для экрана титров",
+            "children" : [
+                {
+                    "control" : "levelFile",
+                    "name" : "outro_path",
+                    "title" : "Outro file",
+                    "title-ru" : "Файл титров:",
+                    "tooltip" : "Please choose a level file that will be played at background of the credits screen when completing this episode.",
+                    "tooltip-ru" : "Пожалуйста выберите файл уровня, который будет играться фоном на экране титров после прохождения этого эпизода.",
+                    "value-default" : "",
+                    "directory" : "episode"
+                }
+            ]
         }
     ]
 }

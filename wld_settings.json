@@ -24,8 +24,8 @@
                 {
                     "control" : "levelFile",
                     "name" : "intro_path",
-                    "title" : "File or directory",
-                    "title-ru" : "Файл или папка:",
+                    "title" : "Level or directory",
+                    "title-ru" : "Уровень или папка:",
                     "tooltip" : "Please choice the single level file\nor type a directory name that contains multiple level files.\nIf you use one level file,\nit will be played at background of the main menu,\nbut if you select a directory, every level\nin that directory will be opened at the main menu randomly every time.",
                     "tooltip-ru" : "Пожалуйста выберите один файл уровня или введите имя директории,\nкоторая содержит несколько файлов уровней.\nЕсли выбрать один файл, то он будет играться фоном в главном меню игры,\nно если вы укажите директорию, то каждый уровень из директории\nбудет открывтаься в главном меню, каждый раз случайный.",
                     "value-default" : "",
@@ -42,8 +42,8 @@
                 {
                     "control" : "levelFile",
                     "name" : "outro_path",
-                    "title" : "Outro file",
-                    "title-ru" : "Файл титров:",
+                    "title" : "Outro level",
+                    "title-ru" : "Уровень титров:",
                     "tooltip" : "Please choose a level file that will be played at background of the credits screen when completing this episode.",
                     "tooltip-ru" : "Пожалуйста выберите файл уровня, который будет играться фоном на экране титров после прохождения этого эпизода.",
                     "value-default" : "",

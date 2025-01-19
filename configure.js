@@ -3,6 +3,21 @@
  */
 
 /**
+ * A helper function that checks whatever assets pack is valid or not
+ */
+function isAssets(dir)
+{
+    return FileIO.isDirExists(dir + "/graphics") && 
+           FileIO.isDirExists(dir + "/graphics/npc") &&
+           FileIO.isFileExists(dir + "/gameinfo.ini");
+};
+
+function isValidIntegration(path)
+{
+    return isAssets(path);
+}
+
+/**
  * A main function called by Moondust Editor to request configuring process
  */
 function onConfigure()
@@ -25,13 +40,21 @@ function onConfigure()
         if(System.osName() == "macos")
         {
             PGE.msgBoxInfo("TheXTech SDK setup",
-                           "In order to start using the TheXTech SDK, you should select an application bundle that contains a complete TheXTech-based game that has game assets presented.");
+                           "In order to start using the TheXTech SDK, you should select an " +
+                           "application bundle that contains a complete TheXTech-based " +
+                           "game that has game assets presented. If you select the applucation bundle " +
+                           "that contains no game assets, you will need to select the suitable directory " +
+                           "in the second dialogue.");
             smbxPath = FileIO.getOpenFilePath("Select the TheXTech-based application...", smbxPath, "Applications (*.app)");
         }
         else
         {
             PGE.msgBoxInfo("TheXTech SDK setup",
-                           "In order to start using the TheXTech SDK, you should select a complete game directory that contains an executable of TheXTech and game assets presented. You also can select the assets directory without an executable. However, you will need to select the executable file path separately at the \"Test\" -> \"TheXTech\" menu.");
+                           "In order to start using the TheXTech SDK, you should select " +
+                           "a complete game directory that contains an executable of TheXTech " +
+                           "and game assets presented. You also can select the assets directory " +
+                           "without an executable. However, you will need to select the executable " +
+                           "file path separately at the \"Test\" -> \"TheXTech\" menu.");
             smbxPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", smbxPath);
         }
 
@@ -98,24 +121,48 @@ function onConfigure()
             if(System.osName() == "macos")
             {
                 var dirFound = false;
-                var assetsPaths =
-                [
-                    // Built-in assets of the app bundle
-                    smbxPath + "/Contents/Resources/assets",
-                    // Game specific assets
-                    "~/TheXTech Games/" + FileIO.getBundleName(smbxPath),
-                    // Debug assets used with a debug version of the game
-                    "~/TheXTech Games/Debug Assets"
-                ];
 
-                for(var i = 0; i < assetsPaths.length; i++)
+                if(!isAssets(smbxPath + "/Contents/Resources/assets"))
                 {
-                    if(FileIO.isDirExists(assetsPaths[i] + "/graphics") && FileIO.isDirExists(assetsPaths[i] + "/graphics/npc"))
+                    PGE.msgBoxInfo( "TheXTech SDK is almost configured",
+                        "You selected the TheXTech bundle that contains no embedded assets. " +
+                        "Now, you should select the directory that contains complete game assets. " +
+                        "They should appear somewhere at the TheXTech/assets directory.");
+
+                    if(FileIO.isDirExists("~/TheXTech Games/TheXTech/assets/"))
+                        smbxPath = "~/TheXTech Games/TheXTech/assets/";
+                    else if(FileIO.isDirExists("~/TheXTech/assets/"))
+                        smbxPath = "~/TheXTech/assets/";
+                    else
+                        smbxPath = "~/";
+
+                    while(1)
                     {
-                        dirFound = true;
-                        smbxPath = assetsPaths[i];
-                        break;
+                        smbxPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", smbxPath);
+
+                        if(smbxPath === "")
+                        {
+                            PGE.msgBoxWarning("Configuring has been canceled",
+                            "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
+                            "To take able use it, you should choice the path to your installed TheXTech.\n\n"+
+                            "TheXTech SDK config pack was not configured!");
+                            return false;
+                        }
+
+                        if(isAssets(smbxPath))
+                        {
+                            dirFound = true;
+                            break;
+                        }
+
+                        PGE.msgBoxWarning("Selected directory is not a game assets pack",
+                        "Selected directory is not a game assets pack. Please try to select a game assets pack directory again.");
                     }
+                }
+                else
+                {
+                    smbxPath += "/Contents/Resources/assets";
+                    dirFound = true;
                 }
 
                 if(!dirFound)

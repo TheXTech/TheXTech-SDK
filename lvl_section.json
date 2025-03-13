@@ -45,21 +45,21 @@
 				"name": "effects",
 				"title": "Effects",
 				"children": [{
-								"control": "string",
+								"control": "lineedit",
 								"name": "fgParticles",
 								"title": "Foreground Particles",
 								"tooltip": "Name of the particle system to draw above the section and below the HUD (supported only at OpenGL feature level 2 and higher).",
 								"value-default": ""
 							},
 							{
-								"control": "string",
+								"control": "lineedit",
 								"name": "bgParticles",
 								"title": "Background Particles",
 								"tooltip": "Name of the particle system to draw above the background and below the section objects (supported only at OpenGL feature level 2 and higher).",
 								"value-default": ""
 							},
 							{
-								"control": "string",
+								"control": "lineedit",
 								"name": "screenEffect",
 								"title": "Screen Effect",
 								"tooltip": "Name of the screen effect to draw above the section and below the HUD (supported only at OpenGL feature level 2 and higher).",

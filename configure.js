@@ -37,6 +37,11 @@ function onConfigure()
 
     while(1)
     {
+        // Read old path
+        ini.beginGroup("main");
+        smbxPath = ini.value("application-path", FileIO.scriptPath());
+        ini.endGroup();
+
         if(System.osName() == "macos")
         {
             PGE.msgBoxInfo("TheXTech SDK setup",
@@ -177,8 +182,16 @@ function onConfigure()
                     throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
             }
 
+            var gameInfoIni = INI.open(smbxPath + "/gameinfo.ini");
+            gameInfoIni.beginGroup("game");
+            var gameTitle = gameInfoIni.value("title", "");
+            gameInfoIni.endGroup();
+            gameInfoIni.close();
+
             ini.beginGroup("main");
             ini.setValue("application-path", smbxPath);
+            ini.setValue("application-title", gameTitle);
+            ini.setValue("application-icon", smbxPath + "/graphics/ui/icon/thextech_16.png");
             ini.setValue("executable-name", executableName);
             ini.setValue("application-dir", 1);
 

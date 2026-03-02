@@ -8,7 +8,10 @@
 function isAssets(dir)
 {
     return FileIO.isDirExists(dir + "/graphics") && 
+           FileIO.isDirExists(dir + "/graphics/block") &&
+           FileIO.isDirExists(dir + "/graphics/background") &&
            FileIO.isDirExists(dir + "/graphics/npc") &&
+           FileIO.isDirExists(dir + "/graphics/ui") &&
            FileIO.isFileExists(dir + "/gameinfo.ini");
 };
 
@@ -17,13 +20,38 @@ function isValidIntegration(path)
     return isAssets(path);
 }
 
+function writeProfile(ini, assetsPath, executableName)
+{
+    var gameInfoIni = INI.open(assetsPath + "/gameinfo.ini");
+    gameInfoIni.beginGroup("game");
+    var gameTitle = gameInfoIni.value("title", "");
+    gameInfoIni.endGroup();
+    gameInfoIni.close();
+
+    ini.beginGroup("main");
+    ini.setValue("application-path", assetsPath);
+    ini.setValue("application-title", gameTitle);
+    ini.setValue("application-icon", assetsPath + "/graphics/ui/icon/thextech_16.png");
+    ini.setValue("executable-name", executableName);
+    ini.setValue("application-dir", 1);
+
+    ini.setValue("graphics-level", "graphics");
+    ini.setValue("graphics-worldmap", "graphics");
+    ini.setValue("graphics-characters", "graphics");
+    ini.setValue("application-path-configured", true);
+    ini.close();
+}
+
 /**
  * A main function called by Moondust Editor to request configuring process
  */
 function onConfigure()
 {
-    var smbxPath = FileIO.scriptPath();
-    var executableName = "smbx.exe";
+    var assetsPath = FileIO.scriptPath();
+    var executableName = "thextech";
+
+    if(System.osName() == "windows")
+        executableName = "thextech.exe";
 
     if(!FileIO.isFileExists(FileIO.scriptPath() + "/main.ini"))
     {
@@ -39,7 +67,7 @@ function onConfigure()
     {
         // Read old path
         ini.beginGroup("main");
-        smbxPath = ini.value("application-path", FileIO.scriptPath());
+        assetsPath = ini.value("application-path", FileIO.scriptPath());
         ini.endGroup();
 
         if(System.osName() == "macos")
@@ -50,7 +78,7 @@ function onConfigure()
                            "game that has game assets presented. If you select the applucation bundle " +
                            "that contains no game assets, you will need to select the suitable directory " +
                            "in the second dialogue.");
-            smbxPath = FileIO.getOpenFilePath("Select the TheXTech-based application...", smbxPath, "Applications (*.app)");
+            assetsPath = FileIO.getOpenFilePath("Select the TheXTech-based application...", assetsPath, "Applications (*.app)");
         }
         else
         {
@@ -60,10 +88,10 @@ function onConfigure()
                            "and game assets presented. You also can select the assets directory " +
                            "without an executable. However, you will need to select the executable " +
                            "file path separately at the \"Test\" -> \"TheXTech\" menu.");
-            smbxPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", smbxPath);
+            assetsPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", assetsPath);
         }
 
-        if(smbxPath === "")
+        if(assetsPath === "")
         {
             PGE.msgBoxWarning("Configuring has been canceled",
             "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
@@ -75,15 +103,18 @@ function onConfigure()
         try
         {
             var executableNames;
+            var systemExecPaths;
 
             if(System.osName() == "macos")
             {
                 executableNames =
                 [
-                    "Super Mario Bros. X.app",
-                    "Adventures of Demo.app",
-                    "TheXTech.app",
+                    "TheXTech.app/Contents/MacOS/TheXTech",
+                    "Super Mario Bros. X.app/Contents/MacOS/TheXTech",
+                    "Adventures of Demo.app/Contents/MacOS/TheXTech",
                 ];
+
+                systemExecPaths = ["/Applications"];
             }
             else if(System.osName() == "windows")
             {
@@ -93,6 +124,12 @@ function onConfigure()
                     "smbx-win64.exe",
                     "thextech.exe",
                     "advdemo.exe",
+                ];
+
+                systemExecPaths = 
+                [
+                    "C:/Games/thextech",
+                    "C:/Program Files/TheXTech",
                 ];
             }
             else // Any other systems
@@ -106,18 +143,41 @@ function onConfigure()
                     "a2xtech-bin",
                     "debug.sh"      // <- Custom debug runner overlay on Linux
                 ];
+
+                systemExecPaths = 
+                [
+                    "/usr/bin",
+                    "/usr/local/bin",
+                ];
             }
 
+            // On macOS, the app bundle itself might serve as a game pack
             if(System.osName() == "macos")
-                executableName = smbxPath + "/Contents/MacOS/TheXTech"
+                executableName = assetsPath + "/Contents/MacOS/TheXTech"
             else
             {
                 for(var i = 0; i < executableNames.length; i++)
                 {
-                    if(FileIO.isFileExists(smbxPath + "/" + executableNames[i]))
+                    if(FileIO.isFileExists(assetsPath + "/" + executableNames[i]))
                     {
                         executableName = executableNames[i];
                         break;
+                    }
+                }
+            }
+
+            // If auto-selected executable does not exists, try to find system-wide one
+            if(!FileIO.isFileExists(executableName))
+            {
+                for(var i = 0; i < systemExecPaths.length; i++)
+                {
+                    for(var j = 0; j < executableNames.length; j++)
+                    {
+                        if(FileIO.isFileExists(systemExecPaths[i] + "/" + executableNames[j]))
+                        {
+                            executableName = systemExecPaths[i] + "/" + executableNames[j];
+                            break;
+                        }
                     }
                 }
             }
@@ -127,7 +187,7 @@ function onConfigure()
             {
                 var dirFound = false;
 
-                if(!isAssets(smbxPath + "/Contents/Resources/assets"))
+                if(!isAssets(assetsPath + "/Contents/Resources/assets"))
                 {
                     PGE.msgBoxInfo( "TheXTech SDK is almost configured",
                         "You selected the TheXTech bundle that contains no embedded assets. " +
@@ -135,17 +195,17 @@ function onConfigure()
                         "They should appear somewhere at the TheXTech/assets directory.");
 
                     if(FileIO.isDirExists("~/TheXTech Games/TheXTech/assets/"))
-                        smbxPath = "~/TheXTech Games/TheXTech/assets/";
+                        assetsPath = "~/TheXTech Games/TheXTech/assets/";
                     else if(FileIO.isDirExists("~/TheXTech/assets/"))
-                        smbxPath = "~/TheXTech/assets/";
+                        assetsPath = "~/TheXTech/assets/";
                     else
-                        smbxPath = "~/";
+                        assetsPath = "~/";
 
                     while(1)
                     {
-                        smbxPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", smbxPath);
+                        assetsPath = FileIO.getOpenDirPath("Select TheXTech Game directory...", assetsPath);
 
-                        if(smbxPath === "")
+                        if(assetsPath === "")
                         {
                             PGE.msgBoxWarning("Configuring has been canceled",
                             "You was canceled a configuring of the\n'TheXTech SDK configuration package'!\n"+
@@ -154,7 +214,7 @@ function onConfigure()
                             return false;
                         }
 
-                        if(isAssets(smbxPath))
+                        if(isAssets(assetsPath))
                         {
                             dirFound = true;
                             break;
@@ -166,40 +226,25 @@ function onConfigure()
                 }
                 else
                 {
-                    smbxPath += "/Contents/Resources/assets";
+                    assetsPath += "/Contents/Resources/assets";
                     dirFound = true;
                 }
 
                 if(!dirFound)
-                    throw("The application '" + smbxPath + "' doesn't contain requires resources");
+                    throw("The application '" + assetsPath + "' doesn't contain requires resources");
             }
             else
             {
-                if(!FileIO.isDirExists(smbxPath + "/graphics"))
-                    throw("'" + smbxPath + "/graphics" + "' directory not exists");
+                if(!FileIO.isDirExists(assetsPath + "/graphics"))
+                    throw("'" + assetsPath + "/graphics" + "' directory not exists");
 
-                if(!FileIO.isDirExists(smbxPath + "/graphics/npc"))
-                    throw("'" + smbxPath + "/graphics/npc" + "' directory not exists");
+                if(!FileIO.isDirExists(assetsPath + "/graphics/npc"))
+                    throw("'" + assetsPath + "/graphics/npc" + "' directory not exists");
             }
 
-            var gameInfoIni = INI.open(smbxPath + "/gameinfo.ini");
-            gameInfoIni.beginGroup("game");
-            var gameTitle = gameInfoIni.value("title", "");
-            gameInfoIni.endGroup();
-            gameInfoIni.close();
 
-            ini.beginGroup("main");
-            ini.setValue("application-path", smbxPath);
-            ini.setValue("application-title", gameTitle);
-            ini.setValue("application-icon", smbxPath + "/graphics/ui/icon/thextech_16.png");
-            ini.setValue("executable-name", executableName);
-            ini.setValue("application-dir", 1);
+            writeProfile(ini, assetsPath, executableName);
 
-            ini.setValue("graphics-level", "graphics");
-            ini.setValue("graphics-worldmap", "graphics");
-            ini.setValue("graphics-characters", "graphics");
-            ini.setValue("application-path-configured", true);
-            ini.close();
 
             //  Generate dummy elements gifs needed for Moondust
 
@@ -217,43 +262,43 @@ function onConfigure()
             for(var i=292; i<=300; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-npc.png";
-                var outputfile = smbxPath+"/graphics/npc/npc-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/npc/npc-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=639; i<=700; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy-block.png";
-                var outputfile = smbxPath+"/graphics/block/block-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/block/block-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=191; i<=200; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_bgo.png";
-                var outputfile = smbxPath+"/graphics/background/background-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/background/background-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=329; i<=400; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_tile.png";
-                var outputfile = smbxPath+"/graphics/tile/tile-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/tile/tile-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=66; i<=100; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_scene.png";
-                var outputfile = smbxPath+"/graphics/scene/scene-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/scene/scene-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=33; i<=100; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_path.png";
-                var outputfile = smbxPath+"/graphics/path/path-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/path/path-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }
             for(var i=33; i<=100; i++)
             {
                 var inputfile = FileIO.scriptPath()+"/commonGFX/dummy_wlvl.png";
-                var outputfile = smbxPath+"/graphics/level/level-" + i + ".png";
+                var outputfile = assetsPath+"/graphics/level/level-" + i + ".png";
                 FileIO.copy( inputfile, outputfile, false );
             }*/
         }
@@ -268,7 +313,7 @@ function onConfigure()
 
     PGE.msgBoxInfo( "TheXTech SDK configured",
                     "Integration configuration pack successfully configured!\n\n"+
-                    "TheXTech assets path is: " + smbxPath + "\n" +
+                    "TheXTech assets path is: " + assetsPath + "\n" +
                     "Default executable name (can be changed at test settings): " + executableName);
 
     return true;

@@ -15,10 +15,100 @@ function isAssets(dir)
            FileIO.isFileExists(dir + "/gameinfo.ini");
 };
 
+/**
+ * A function called from Moondust Editor to verify validness of the configured Integration
+ */
 function isValidIntegration(path)
 {
     return isAssets(path);
 }
+
+
+function findExecutablePath(executableName, assetsPath)
+{
+    var executableNames;
+    var systemExecPaths;
+
+    if(System.osName() == "macos")
+    {
+        executableNames =
+        [
+            "TheXTech.app/Contents/MacOS/TheXTech",
+            "Super Mario Bros. X.app/Contents/MacOS/TheXTech",
+            "Adventures of Demo.app/Contents/MacOS/TheXTech",
+        ];
+
+        systemExecPaths = ["/Applications"];
+    }
+    else if(System.osName() == "windows")
+    {
+        executableNames =
+        [
+            "smbx.exe",
+            "smbx-win64.exe",
+            "thextech.exe",
+            "advdemo.exe",
+        ];
+
+        systemExecPaths =
+        [
+            "C:/Games/thextech",
+            "C:/Program Files/TheXTech",
+        ];
+    }
+    else // Any other systems
+    {
+        executableNames =
+        [
+            "smbx",
+            "thextech",
+            "advdemo",
+            "a2xtech",
+            "a2xtech-bin",
+            "debug.sh"      // <- Custom debug runner overlay on Linux
+        ];
+
+        systemExecPaths =
+        [
+            "/usr/bin",
+            "/usr/local/bin",
+        ];
+    }
+
+    // On macOS, the app bundle itself might serve as a game pack
+    if(System.osName() == "macos")
+        executableName = assetsPath + "/Contents/MacOS/TheXTech"
+    else
+    {
+        for(var i = 0; i < executableNames.length; i++)
+        {
+            if(FileIO.isFileExists(assetsPath + "/" + executableNames[i]))
+            {
+                executableName = executableNames[i];
+                break;
+            }
+        }
+    }
+
+    // If auto-selected executable does not exists, try to find system-wide one
+    if(!FileIO.isFileExists(executableName))
+    {
+        for(var i = 0; i < systemExecPaths.length; i++)
+        {
+            for(var j = 0; j < executableNames.length; j++)
+            {
+                if(FileIO.isFileExists(systemExecPaths[i] + "/" + executableNames[j]))
+                {
+                    executableName = systemExecPaths[i] + "/" + executableNames[j];
+                    break;
+                }
+            }
+        }
+    }
+
+    return executableName;
+}
+
 
 function writeProfile(ini, assetsPath, executableName)
 {
@@ -40,6 +130,116 @@ function writeProfile(ini, assetsPath, executableName)
     ini.setValue("graphics-characters", "graphics");
     ini.setValue("application-path-configured", true);
     ini.close();
+}
+
+function nameGameProfile(assetsPath, isLegacy)
+{
+    var profile = new Object();
+    var executableName = "thextech";
+
+    if(System.osName() == "windows")
+        executableName = "thextech.exe";
+
+    executableName = findExecutablePath(executableName, assetsPath);
+
+    var gameInfoIni = INI.open(assetsPath + "/gameinfo.ini");
+    gameInfoIni.beginGroup("game");
+    var gameTitle = gameInfoIni.value("title", "");
+    gameInfoIni.endGroup();
+    gameInfoIni.close();
+
+    profile["application-path"] = assetsPath;
+    profile["application-title"] = gameTitle + (isLegacy ? " [LEGACY]" : "");
+    profile["application-icon"] = assetsPath + "/graphics/ui/icon/thextech_16.png";
+    profile["executable-name"] = executableName;
+    profile["application-dir"] = 1;
+
+    profile["graphics-level"] = "graphics";
+    profile["graphics-worldmap"] = "graphics";
+    profile["graphics-characters"] = "graphics";
+    profile["application-path-configured"] = true;
+
+    return profile;
+}
+
+/**
+ * Optional function called from Moondust Editor to query for automatic profiles
+ * created from standardised installation paths. It must return an array of objects.
+ */
+function findAutoProfiles()
+{
+    var profiles = new Array();
+
+    var standardGamePaths;
+    var legacyAssetsPaths;
+
+    if(System.osName() == "windows")
+    {
+        standardGamePaths =
+        [
+            "C:/Program Files/TheXTech/assets",
+            System.homeDir() + "/.PGE_Project/thextech/assets",
+            System.appData() + "/TheXTech/assets",
+        ];
+
+        legacyAssetsPaths = [System.homeDir() + "/.PGE_Project/thextech"];
+    }
+    else if(System.osName() == "macos")
+    {
+        standardGamePaths =
+        [
+            "/Applications/Super Mario Bros. X.app/Contents/Resources/assets",
+            "/Applications/Adventures of Demo.app/Contents/Resources/assets",
+            System.homeDir() + "/TheXTech/",
+        ];
+
+        var gamesDir = System.homeDir() + "/TheXTech Games";
+
+        if(FileIO.isDirExists(gamesDir))
+        {
+            var dirs = FileIO.getDirDirs(gamesDir);
+
+            for(var i = 0; i < dirs.length; i++)
+                standardGamePaths.push(gamesDir + "/" + dirs[i] + "/assets");
+        }
+    }
+    else
+    {
+        standardGamePaths =
+        [
+            "/usr/local/share/games/TheXTech",
+            "/usr/share/games/TheXTech",
+            System.homeDir() + "/.local/share/TheXTech/assets",
+            System.homeDir() + "/.PGE_Project/thextech/assets",
+        ];
+
+        legacyAssetsPaths = [System.homeDir() + "/.PGE_Project/thextech"];
+    }
+
+
+    for(var i = 0; i < standardGamePaths.length; ++i)
+    {
+        var gamesRoot = standardGamePaths[i];
+        var dirs = FileIO.getDirDirs(gamesRoot);
+
+        for(var j = 0; j < dirs.length; ++j)
+        {
+            var assetsPath = gamesRoot + "/" + dirs[j];
+
+            if(isAssets(assetsPath))
+                profiles.push(nameGameProfile(assetsPath, false));
+        }
+    }
+
+    for(var j = 0; j < legacyAssetsPaths.length; ++j)
+    {
+        var assetsPath = legacyAssetsPaths[j];
+
+        if(isAssets(assetsPath))
+            profiles.push(nameGameProfile(assetsPath, true));
+    }
+
+    return profiles;
 }
 
 /**
@@ -102,85 +302,7 @@ function onConfigure()
 
         try
         {
-            var executableNames;
-            var systemExecPaths;
-
-            if(System.osName() == "macos")
-            {
-                executableNames =
-                [
-                    "TheXTech.app/Contents/MacOS/TheXTech",
-                    "Super Mario Bros. X.app/Contents/MacOS/TheXTech",
-                    "Adventures of Demo.app/Contents/MacOS/TheXTech",
-                ];
-
-                systemExecPaths = ["/Applications"];
-            }
-            else if(System.osName() == "windows")
-            {
-                executableNames =
-                [
-                    "smbx.exe",
-                    "smbx-win64.exe",
-                    "thextech.exe",
-                    "advdemo.exe",
-                ];
-
-                systemExecPaths = 
-                [
-                    "C:/Games/thextech",
-                    "C:/Program Files/TheXTech",
-                ];
-            }
-            else // Any other systems
-            {
-                executableNames =
-                [
-                    "smbx",
-                    "thextech",
-                    "advdemo",
-                    "a2xtech",
-                    "a2xtech-bin",
-                    "debug.sh"      // <- Custom debug runner overlay on Linux
-                ];
-
-                systemExecPaths = 
-                [
-                    "/usr/bin",
-                    "/usr/local/bin",
-                ];
-            }
-
-            // On macOS, the app bundle itself might serve as a game pack
-            if(System.osName() == "macos")
-                executableName = assetsPath + "/Contents/MacOS/TheXTech"
-            else
-            {
-                for(var i = 0; i < executableNames.length; i++)
-                {
-                    if(FileIO.isFileExists(assetsPath + "/" + executableNames[i]))
-                    {
-                        executableName = executableNames[i];
-                        break;
-                    }
-                }
-            }
-
-            // If auto-selected executable does not exists, try to find system-wide one
-            if(!FileIO.isFileExists(executableName))
-            {
-                for(var i = 0; i < systemExecPaths.length; i++)
-                {
-                    for(var j = 0; j < executableNames.length; j++)
-                    {
-                        if(FileIO.isFileExists(systemExecPaths[i] + "/" + executableNames[j]))
-                        {
-                            executableName = systemExecPaths[i] + "/" + executableNames[j];
-                            break;
-                        }
-                    }
-                }
-            }
+            executableName = findExecutablePath(executableName, assetsPath);
 
             //Attempt to detect SMBX directory
             if(System.osName() == "macos")

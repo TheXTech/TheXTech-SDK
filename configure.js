@@ -132,7 +132,7 @@ function writeProfile(ini, assetsPath, executableName)
     ini.close();
 }
 
-function nameGameProfile(assetsPath, isLegacy)
+function makeGameProfile(assetsPath, execPath, isLegacy)
 {
     var profile = new Object();
     var executableName = "thextech";
@@ -140,7 +140,10 @@ function nameGameProfile(assetsPath, isLegacy)
     if(System.osName() == "windows")
         executableName = "thextech.exe";
 
-    executableName = findExecutablePath(executableName, assetsPath);
+    if(execPath && FileIO.isFileExists(execPath))
+        executableName = execPath;
+    else
+        executableName = findExecutablePath(executableName, assetsPath);
 
     var gameInfoIni = INI.open(assetsPath + "/gameinfo.ini");
     gameInfoIni.beginGroup("game");
@@ -168,10 +171,10 @@ function nameGameProfile(assetsPath, isLegacy)
  */
 function findAutoProfiles()
 {
-    var profiles = new Array();
-
-    var standardGamePaths;
-    var legacyAssetsPaths;
+    var profiles = [];
+    var standardGamePaths = [];
+    var legacyAssetsPaths = [];
+    var bundlesSets = [];
 
     if(System.osName() == "windows")
     {
@@ -186,12 +189,27 @@ function findAutoProfiles()
     }
     else if(System.osName() == "macos")
     {
-        standardGamePaths =
+        bundlesSets =
         [
-            "/Applications/Super Mario Bros. X.app/Contents/Resources/assets",
-            "/Applications/Adventures of Demo.app/Contents/Resources/assets",
-            System.homeDir() + "/TheXTech/",
+            {
+                exec: "/Applications/Super Mario Bros. X.app/Contents/MacOS/TheXTech",
+                assets: "/Applications/Super Mario Bros. X.app/Contents/Resources/",
+                root: "assets"
+            },
+            {
+                exec: "/Applications/Adventures of Demo.app/Contents/MacOS/TheXTech",
+                assets: "/Applications/Adventures of Demo.app/Contents/Resources/",
+                root: "assets"
+            }
         ];
+
+        if(FileIO.isDirExists(System.homeDir() + "/TheXTech/assets"))
+        {
+            bundlesSets.push({
+                exec: "/Applications/TheXTech.app/Contents/MacOS/TheXTech",
+                assets: System.homeDir() + "/TheXTech/assets"
+            });
+        }
 
         var gamesDir = System.homeDir() + "/TheXTech Games";
 
@@ -200,7 +218,12 @@ function findAutoProfiles()
             var dirs = FileIO.getDirDirs(gamesDir);
 
             for(var i = 0; i < dirs.length; i++)
-                standardGamePaths.push(gamesDir + "/" + dirs[i] + "/assets");
+            {
+                bundlesSets.push({
+                    exec: "/Applications/" + dirs[i] + ".app/Contents/MacOS/TheXTech",
+                    assets: gamesDir + "/" + dirs[i] + "/assets"
+                });
+            }
         }
     }
     else
@@ -216,6 +239,19 @@ function findAutoProfiles()
         legacyAssetsPaths = [System.homeDir() + "/.PGE_Project/thextech"];
     }
 
+    for(var i = 0; i < bundlesSets.length; ++i)
+    {
+        var bundle = bundlesSets[i];
+        var dirs = bundle.root != undefined ? [ bundle.root ] : FileIO.getDirDirs(bundle.assets);
+
+        for(var j = 0; j < dirs.length; ++j)
+        {
+            var assetsPath = bundle.assets + "/" + dirs[j];
+
+            if(isAssets(assetsPath))
+                profiles.push(makeGameProfile(assetsPath, bundle.exec, false));
+        }
+    }
 
     for(var i = 0; i < standardGamePaths.length; ++i)
     {
@@ -227,7 +263,7 @@ function findAutoProfiles()
             var assetsPath = gamesRoot + "/" + dirs[j];
 
             if(isAssets(assetsPath))
-                profiles.push(nameGameProfile(assetsPath, false));
+                profiles.push(makeGameProfile(assetsPath, null, false));
         }
     }
 
@@ -236,7 +272,7 @@ function findAutoProfiles()
         var assetsPath = legacyAssetsPaths[j];
 
         if(isAssets(assetsPath))
-            profiles.push(nameGameProfile(assetsPath, true));
+            profiles.push(makeGameProfile(assetsPath, null, true));
     }
 
     return profiles;

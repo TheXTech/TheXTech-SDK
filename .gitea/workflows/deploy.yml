@@ -1,0 +1,39 @@
+name: Deployment of the package
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pack-and-upload:
+    runs-on: debian-12-deb-build
+    steps:
+      - name: Clone repository
+        run: git clone ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY} --depth 1 TheXTechSDK
+
+      - name: Pack an archive
+        run: |
+            mkdir output
+            zip -9 -r output/TheXTech-SDK.zip "TheXTechSDK" -x TheXTechSDK/.git\* TheXTechSDK/items/\*
+
+      - name: List built files
+        run: |
+            echo "Out"
+            ls -la packages
+
+      - name: Uploading results...
+        run: |
+            UPLOAD_LIST="" # set ssl:verify-certificate no;
+
+            for q in ./output/*; do
+                echo "$q will be uploaded..."
+                UPLOAD_LIST="${UPLOAD_LIST} put -O config_packs/ $q;"
+            done
+
+            echo "Uploading..."
+            lftp -e "${UPLOAD_LIST} exit" -u ${{ secrets.builds_login }},${{ secrets.builds_password }} ${{ secrets.builds_host }}
+            echo "Done!"

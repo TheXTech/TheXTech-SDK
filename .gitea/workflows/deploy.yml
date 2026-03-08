@@ -18,7 +18,7 @@ jobs:
       - name: Pack an archive
         run: |
             mkdir output
-            zip -9 -r output/TheXTech-SDK.zip "TheXTechSDK" -x TheXTechSDK/.git\* TheXTechSDK/items/\*
+            7z a -tzip -mx=9 -mmt2 output/TheXTech-SDK.zip "TheXTechSDK" -x!TheXTechSDK/.git -x!TheXTechSDK/.gitea -x!TheXTechSDK/.gitignore -x!TheXTechSDK/.gitattributes -x!TheXTechSDK/items
 
       - name: List built files
         run: |

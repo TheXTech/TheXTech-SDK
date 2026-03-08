@@ -44,16 +44,25 @@ function findExecutablePath(executableName, assetsPath)
     {
         executableNames =
         [
+            "thextech-win64.exe",
+            "thextech-win32.exe",
+            "thextech-arm64.exe",
+            "thextech.exe",
             "smbx.exe",
             "smbx-win64.exe",
-            "thextech.exe",
+            "smbx-arm64.exe",
             "advdemo.exe",
+            "advdemo-win64.exe",
+            "advdemo-arm64.exe",
         ];
 
         systemExecPaths =
         [
             "C:/Games/thextech",
+            "C:/Games/thextech-bin",
+            "C:/Games/thextech-main",
             "C:/Program Files/TheXTech",
+            "C:/Program Files (x86)/TheXTech",
         ];
     }
     else // Any other systems

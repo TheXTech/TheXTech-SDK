@@ -1,5 +1,34 @@
 #!/bin/bash
 
+MISSING_COMMANDS=""
+HAS_MISSING_COMMANDS=false
+SED_RUNTIME=sed
+
+if [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "freebsd"* || "$OSTYPE" == "openbsd"* || "$OSTYPE" == "netbsd"* ]]; then
+    SED_RUNTIME=gsed
+fi
+
+function cmdExists()
+{
+    if ! type "$1" > /dev/null 2>&1; then
+        MISSING_COMMANDS="$MISSING_COMMANDS $1"
+        HAS_MISSING_COMMANDS=true
+    fi
+}
+
+cmdExists ${SED_RUNTIME}
+cmdExists unix2dos
+cmdExists dos2unix
+
+if $HAS_MISSING_COMMANDS; then
+    echo "===ERROR: CAN'T RUN SCRIPT==="
+    echo "Your environment has next required commands missing:"
+    echo "${MISSING_COMMANDS}"
+    echo ""
+    echo "Please install missing packages!"
+    exit 1
+fi
+
 
 function writeHead()
 {
@@ -19,7 +48,7 @@ function buildIni()
     dstSection=$4
     dstFile=$5
     dos2unix $srcHead
-    total=$(sed -nr "/^\[$srcSection\]/ { :l /^total[ ]*=/ { s/[^=]*=[ ]*//; p; q;}; n; b l;}" $srcHead)
+    total=$(${SED_RUNTIME} -nr "/^\[$srcSection\]/ { :l /^total[ ]*=/ { s/[^=]*=[ ]*//; p; q;}; n; b l;}" $srcHead)
 
     echo "Total $srcHead - $total"
 
@@ -61,3 +90,6 @@ buildIni wld_levels.ini     levels-main         levels/level            level   
 buildIni wld_paths.ini      path-main           paths/path              path        ../wld_paths.ini
 buildIni wld_scenery.ini    scenery-main        scenery/scenery         scenery     ../wld_scenery.ini
 buildIni wld_tiles.ini      tiles-main          terrain/tile            tile        ../wld_tiles.ini
+
+echo "Done!"
+
